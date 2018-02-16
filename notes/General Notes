@@ -1,0 +1,3 @@
+- AMD (asyn Module Definition) is what loads in javascript modules to the framework
+- "require" makes a module's methods available for use within the scope of the file
+- "define" allows you to create and register your own modules

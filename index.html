@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial: Hello Dojo!</title>
+</head>
+<body>
+    <h1 id="greeting">Hello</h1>
+    <p id="testMsg"></p>
+    
+    <!--load custom packages-->
+    <script>
+        /*var dojoConfig = {
+            async: true,
+            //this code registers the correct location of the demo packatge so we can still load
+            // dojo from the CDN while still being able to load local modules
+            packages: [{
+                name: "sampleLocalModules",
+                location: location.pathname.replace(/\/[^/]*$/, '') + '/sampleLocalModules'
+            }]
+        }*/
+    </script>
+    <!-- load Dojo -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
+            data-dojo-config="async: true"></script>
+    <script>
+        //notice that require is a function call, the first arg is the modules needed,
+        //the second is the class instances those modules provide for manipulation
+        require(['dojo/dom', 'dojo/dom-construct'],
+            function(dom, domConstruct, myModule) {
+                var greetingNode = dom.byId('greeting');
+                domConstruct.place('<em> Dojo!</em>', greetingNode);
+                /*myModule.setText('testMsg', 'This... is a test!');
+
+                settimeout(function() {
+                    myModule.restoreText('Drop that code bass');
+                }, 3000);*/
+            }
+        );
+    </script>
+</body>
+</html>
