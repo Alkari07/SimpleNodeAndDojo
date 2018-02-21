@@ -6,36 +6,45 @@
 </head>
 <body>
     <h1 id="greeting">Hello</h1>
-    <p id="testMsg"></p>
-    
+    <p id="testMsg">Waiting</p>
+    <!-- load Dojo -->
+    <script src="/dojo/dojo.js"
+            data-dojo-config="async: true"></script>
     <!--load custom packages-->
     <script>
         var dojoConfig = {
             async: true,
+            baseUrl: '.',
             //this code registers the correct location of the demo packatge so we can still load
             // dojo from the CDN while still being able to load local modules
-            packages: [{
+            packages: ['dojo', 'dijit', 'dojox', {
                 name: "customModules",
                 location: location.pathname.replace(/\/[^/]*$/, '') + '/customModules'
             }]
         }
     </script>
-    <!-- load Dojo -->
     
-    <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
-            data-dojo-config="async: true"></script>
     <script>
         //notice that require is a function call, the first arg is the modules needed,
         //the second is the class instances those modules provide for manipulation
-        require(['dojo/dom', 'dojo/dom-construct', 'customModules/myModule'],
-            function(dom, domConstruct, myModule) {
+        require(['dojo/dom', 'dojo/dom-construct', 'customModules/myModule', 'dojo/fx',
+        //the domReady plugin has special functionality activated by adding the !
+        //in this case, all other requirements and definitions won't fire until the dom is defined
+        'dojo/domReady!'],
+            function(dom, domConstruct, myModule, fx) {
                 var greetingNode = dom.byId('greeting');
                 domConstruct.place('<em> Dojo!</em>', greetingNode);
                 myModule.setText('testMsg', 'This... is a test!  Of changing something simple');
 
                 setTimeout(function() {
-                    myModule.restoreText('Drop that code bass');
+                    myModule.restoreText('testMsg');
                 }, 3000);
+
+                fx.slideTo({
+                    node: greetingNode,
+                    top: 100,
+                    left: 200
+                }).play();
             }
         );
     </script>

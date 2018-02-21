@@ -21,6 +21,7 @@ app.use("/", router);
 //this is how you register additional static folders for files to be accessed from
 //basically makes everything in here visible from the root level
 app.use(express.static('public'));
+app.use(express.static('dojo_modules'));
 
 //anything that doesn't match anything else gets sent here
 app.use("*", function(req, res) {
