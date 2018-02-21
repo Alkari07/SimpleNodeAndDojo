@@ -17,7 +17,12 @@ router.get("/about", function(req, res) {
 })
 
 app.use("/", router);
+
+//this is how you register additional static folders for files to be accessed from
+//basically makes everything in here visible from the root level
 app.use(express.static('public'));
+
+//anything that doesn't match anything else gets sent here
 app.use("*", function(req, res) {
     res.sendFile(path+"404.html");
 });
