@@ -10,15 +10,15 @@
     
     <!--load custom packages-->
     <script>
-        /*var dojoConfig = {
+        var dojoConfig = {
             async: true,
             //this code registers the correct location of the demo packatge so we can still load
             // dojo from the CDN while still being able to load local modules
             packages: [{
-                name: "sampleLocalModules",
-                location: location.pathname.replace(/\/[^/]*$/, '') + '/sampleLocalModules'
+                name: "customModules",
+                location: location.pathname.replace(/\/[^/]*$/, '') + '/customModules'
             }]
-        }*/
+        }
     </script>
     <!-- load Dojo -->
     
@@ -27,15 +27,15 @@
     <script>
         //notice that require is a function call, the first arg is the modules needed,
         //the second is the class instances those modules provide for manipulation
-        require(['dojo/dom', 'dojo/dom-construct'],
+        require(['dojo/dom', 'dojo/dom-construct', 'customModules/myModule'],
             function(dom, domConstruct, myModule) {
                 var greetingNode = dom.byId('greeting');
                 domConstruct.place('<em> Dojo!</em>', greetingNode);
-                /*myModule.setText('testMsg', 'This... is a test!');
+                myModule.setText('testMsg', 'This... is a test!');
 
-                settimeout(function() {
+                setTimeout(function() {
                     myModule.restoreText('Drop that code bass');
-                }, 3000);*/
+                }, 3000);
             }
         );
     </script>

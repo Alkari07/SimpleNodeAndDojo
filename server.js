@@ -1,10 +1,28 @@
 var express = require('express');
 var app = express();
-var path = require('path');
+var router = express.Router();
+var path = __dirname + '/views/';
 
-//viewed at :8080
-app.get('/', function(req, res){
-    res.sendFile(path.join(__dirname +'/index.html'));
+router.use(function (req, res, next) {
+    console.log("/" + req.method);
+    next();
 });
 
-app.listen(8080);
+router.get("/", function(req, res) {
+    res.sendFile(path+"index.html");
+});
+
+router.get("/about", function(req, res) {
+    res.sendFile(path+"about.html");
+})
+
+app.use("/", router);
+app.use(express.static('public'));
+app.use("*", function(req, res) {
+    res.sendFile(path+"404.html");
+});
+
+app.listen(3000, function() {
+    console.log("Live at Port 3000");
+    //notice, these console logs are displayed on the SERVER console, since this isn't browser client code
+});
