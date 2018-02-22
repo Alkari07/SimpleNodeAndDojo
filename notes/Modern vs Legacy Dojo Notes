@@ -1,0 +1,16 @@
+- The core concept of modern dojo vs legacy is that things in the global namespace are bad
+    - you shouldn't be just typing dojo.xxx to directly access attributes or object or methods
+    - they should be passed in as parameters to a module 
+- another key concept is that everything should be done async as much as possible
+    - creates a javascript closure (independent block)
+    - the require function makes all dependency modules load async
+    - loader plugins (specified by a !) tell the loader that this module
+        controls the behavior of the loader itself (ex: domReady!)
+- baseless: a module doesn't load more of the dojo framework than it needs,
+    rather than importing one monolithic thing like dojo.js 
+- dojo/on - event handling package
+    - these are things like 'click'
+- dojo/aspect - method advice
+    - advice adds functionality to a method
+    
+
