@@ -1,0 +1,52 @@
+<script>
+    dojoConfig = {
+        //set dependency modules
+        has: {
+            "dojo-firebug": true,
+            "dojo-debug-messages": true
+        },
+        //Don't attempt to parse the page for widgets
+        parseOnLoad: false,
+        packages: [
+            //any references to a demo should load modules locally, not from CDN
+            {
+                name: "demo",
+                location: "/dojoConfigLesson"
+            }
+        ],
+        //timeout after 10 seconds
+        waitSeconds: 10,
+        map: {
+            //instead of having to type "dojo/domReady!", we just want "ready!" instead
+            "*": {
+                ready: "dojo/domReady"
+
+            }
+        },
+        //get "fresh" resources
+        cacheBust: true,
+        //since dojoConfig is appWide, it is the ideal place to put custom settings you make
+        //username is not a dojo thing, but its something we can use everywhere
+        app: {
+            userName: "Rob"
+        }
+    };
+</script>
+
+<!--Load Dojo from CDN -->
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+
+<!--Load a demo module -->
+<script>
+    //notice that now "demo" is an alias for the path to the package,
+    //thus, you can create logical packgae names that have nothing to do
+    //with the directory structure of the app
+    require(["demo/AuthoredDialog", "dojo/parser", "dojo/_base/config","ready!"],
+        function(AuthoredDialog, parser, config) {
+            //parse the page
+            parser.parse();
+            AuthoredDialog.execute('executionBlock', config.app.userName);
+        });
+
+</script>
+<div id='executionBlock'></div>

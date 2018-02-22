@@ -14,7 +14,15 @@ router.get("/", function(req, res) {
 
 router.get("/about", function(req, res) {
     res.sendFile(path+"about.html");
-})
+});
+
+router.get('/dojoConfigLesson', function(req, res) {
+    res.sendFile(path+ "dojoConfLesson/dojoConfigLesson.html");
+});
+
+router.get('/dojoConfigLesson2', function(req, res) {
+    res.sendFile(path+ "dojoConfLesson/dojoConfigLesson2.html");
+});
 
 app.use("/", router);
 
