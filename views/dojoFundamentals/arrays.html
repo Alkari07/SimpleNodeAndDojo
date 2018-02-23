@@ -1,0 +1,56 @@
+<script src="/dojoConfigLesson/dojoConfig.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+<script>
+    require([
+        'dojo/_base/array',
+        'dojo/dom-construct',
+        'dojo/dom',
+        'dojo/domReady!'
+    ], function(arrayUtil, domConstruct, dom) {
+        //**SEARCHING
+        var arr1=[1,2,3,4,3,2,1,2,3,4,3,2,1];
+        domConstruct.place('<p>Index of first 2: ' + arrayUtil.indexOf(arr1, 2)+'</p>', 'msgs'); //1
+        domConstruct.place('<p>Index of first 2 after index 2: ' + arrayUtil.indexOf(arr1, 2, 2)+'</p>', 'msgs'); //5
+        domConstruct.place('<p>Index of last 2: ' + arrayUtil.lastIndexOf(arr1, 2)+'</p>', 'msgs');//11
+        
+        //can also search for objects, not just primatives and strings
+        //does by reference equality (so notice, these return different results despite being the same by value)
+        var obj1 = {id: 1};
+        var arr2 = [{ id: 0 }, obj1, { id: 2 }, { id: 3 }];
+        domConstruct.place('<p>Index of obj1: ' + arrayUtil.lastIndexOf(arr2, obj1)+'</p>', 'msgs'); //1
+        domConstruct.place('<p>Index of {id:1}: ' + arrayUtil.lastIndexOf(arr2, {id:1})+'</p>', 'msgs'); //-1
+
+        //**FOREACH looping
+        //the foreach looping allows you to manipulate the array while it is being iterated over and will 
+        //NOT skip undefined indices which exist in the array
+        var arr = ["one", "two", "three", "four"],
+            // dom is from dojo/dom
+            list1 = dom.byId("myList");
+
+        // Skip over index 4, leaving it undefined
+        arr[5] = "six";
+        var additionalParams = {
+            id: 5,
+            name: 'foo'
+        }
+
+        //you can pass 'this' as the additionalParam object to pass the entire current scope
+        arrayUtil.forEach(arr, function(item, index) {
+            //this function is called for every item in the array, even the undefined one
+            if (index==3) {
+                //this will change the original array
+                arr[5] = "seven";
+                console.log('additional params: ' + additionalParams);
+            }
+            
+            domConstruct.create('li', {innerHTML: item + ' (' + index + ')'}, list1);
+        }, additionalParams);
+
+        //**MANIPULATING
+        
+    });
+</script>
+<body>
+    <div id='msgs'></div>
+    <ul id='myList'></ul>
+</body>
