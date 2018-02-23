@@ -8,9 +8,11 @@
         'dijit/registry',
         'dojo/aspect',
         'dojo/topic',
+        'dojo/Deferred',
+        'dojo/request',
         'dijit/form/Button',
         'dojo/domReady!'
-    ], function(dom, on, parser, registry, aspect, topic){
+    ], function(dom, on, parser, registry, aspect, topic, Deferred, request, Button){
         var myObj = {
             myClick : function(evt) {
                 console.log("I was clicked");
@@ -43,6 +45,53 @@
         topic.subscribe("some/topic", subscribedFunction);
 
         topic.publish("some/topic", "one", "two");
+
+        //basic promise functionality uses the "Deferred architecture"
+        function createMyDeferred() {
+            var myDeferred = new Deferred();
+            setTimeout(function() {
+                myDeferred.resolve({success: true});
+            }, 1000);
+            return myDeferred;
+        }
+
+        var deferred = createMyDeferred();
+        deferred.then(function(data) {
+            //data is what is returned by the function
+            console.log("Success: " + JSON.stringify(data));
+        }, function(err) {
+            console.log("Error: " + err);
+        });
+
+        //ajax like requests requests are handled by the request module
+        request.get("http://jsonplaceholder.typicode.com/posts/1", {
+            handleAs: "json"
+        }).then(function(response) {
+            console.log("success response", response);
+        }, function(err) {
+            console.log("error", err);
+        });
+
+        //you can add watchers to DOM attributes
+        var button = new Button({
+            label: "Original label"
+        }, "button4");
+
+        //sets up a watch on button.label
+        var buttonHandle = button.watch("label", function(attr, oldValue, newValue) {
+            console.log('button.'+attr+" changed from " + oldValue, " to " + newValue);
+        });
+
+        //Gets the current label
+        var label = button.get("label");
+        console.log("button's current label: " + label);
+
+        //this changes the label and should call the watch
+        button.set("label", "label change 1");
+
+        //this will stop the watch
+        buttonHandle.unwatch();
+        button.set("label", "final change");
     });
 
 </script>
@@ -56,6 +105,8 @@
                 console.log("I was clicked");
             </script>
         </button>
+        <br>
+        <div id="button4"></div>
     </div>
 
 </body>
