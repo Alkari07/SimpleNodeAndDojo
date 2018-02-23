@@ -12,5 +12,9 @@
     - these are things like 'click'
 - dojo/aspect - method advice
     - advice adds functionality to a method
+- aspects are used to add functionality before, after, and around a method
+- topic/subscription is a way to register a variable as something that can be "subscribed" to
+    - at certain times, the variable can "publish" which will trigger all subscribed functions
+
     
 

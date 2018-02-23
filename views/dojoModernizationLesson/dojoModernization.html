@@ -6,17 +6,43 @@
         "dojo/on",
         'dojo/parser',
         'dijit/registry',
+        'dojo/aspect',
+        'dojo/topic',
         'dijit/form/Button',
         'dojo/domReady!'
-    ], function(dom, on, parser, registry){
-        var myClick = function(evt) {
-            console.log("I was clicked");
+    ], function(dom, on, parser, registry, aspect, topic){
+        var myObj = {
+            myClick : function(evt) {
+                console.log("I was clicked");
+                return "I'm Done";
+            }
         };
 
         parser.parse();
 
-        on(dom.byId("button1"), "click", myClick);
-        on(registry.byId("button2"), "click", myClick);
+        on(dom.byId("button1"), "click", myObj.myClick);
+        on(registry.byId("button2"), "click", myObj.myClick);
+
+        var callback = function(evt) {
+            console.log("Advice functionality was added with event " + evt);
+        };
+        //the final boolean here is "relative arguments".  If set to true, the arguments forwarded from the original call
+        var handleBefore = aspect.before(myObj, "myClick", callback, true);
+        //if left off, then the return value of the original function is used as the param in the callback
+        var handleAfter = aspect.after(myObj, "myClick", callback);
+
+        //this will invoke the aspect handler, but after this leaves scope the handle will be lost and so will the aspect call
+        myObj.myClick("blargh");
+
+        //topic subscription allows for triggering of all subscribed methods
+        var subscribedFunction = function() {
+            //arguments is a locally scoped variable within the topic object structure - you can always count on having it
+            //contains an array of args in the order they were passed by the publisher
+            console.log("received: ", arguments);
+        };
+        topic.subscribe("some/topic", subscribedFunction);
+
+        topic.publish("some/topic", "one", "two");
     });
 
 </script>
