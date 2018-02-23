@@ -1,0 +1,115 @@
+<script src="/dojoConfigLesson/dojoConfig.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+<script>
+    require([
+        'dojo/dom',
+        'dojo/on',
+        'dojo/request',
+        'dojo/request/notify',
+        'dojo/dom-construct',
+        'dojo/query',
+        'dojo/domReady!'
+    ], function(dom, on, request, notify, domConstruct) {
+        var baseUrl = 'http://jsonplaceholder.typicode.com/posts';
+        request(baseUrl+'/1').then(
+            function(text) {
+                console.log("The response content is: " + text);
+            },
+            function (error) {
+                console.error("An error occurred: " + error);
+            }
+        );
+        //second param in the request call is the options object
+        /*
+        request('URL', {
+            method: 'GET, POST, PUT',
+            sync: "if true, the method blocks (is done synchronously)",
+            query: "A string or key value object containing query parameters to append to the url"
+            data: "A string, key value object, or FormData object containing data to transfer to the server"
+            timeout: "Time in ms to wait before failing"
+            handleAs: "A string representing how to convert the text payload, ex 'text' or 'json'"
+            headers: "A key value object containing extra http headers to send"
+        });
+        */
+        request(baseUrl, {
+            method: "POST",
+            data: {
+                color: "blue",
+                answer: 42
+            },
+            headers: {
+                "X-somethingElse": "A value"
+            }
+        }).then(
+            function(text) {
+                console.log("Checking the outgoing traffic shows new data and headers");
+            },
+            function (error) {
+                console.log("Checking the outgoing traffic shows new data and headers");
+            }
+        );
+
+        var resultDiv = dom.byId('resultDiv');
+        var headersDiv = dom.byId('headersDiv');
+
+        //attach the onclick event handler to the textButton
+        //the 'response' attribute in this chain causes the return object to include the headers
+        on(dom.byId('textButton'), 'click', function(evt) {
+            //request the text file
+            request.get(baseUrl+'/1').response.then(
+                function(response) {
+                    console.log(response);
+                    resultDiv.innerHTML = "<pre>data: "+response.data+"</pre>";
+                    headersDiv.innerHTML = "<pre>Header Exmaple: "+response.getHeader('Pragma')+"</pre>";
+                },
+                function(error){
+                    //display the error returned
+                    resultDiv.innerHTML=error;
+                }
+            )
+        });
+
+        //**Reporting status
+        //handlers for lifecycle hooks for ajax requests
+
+        //ajax call begins
+        notify('start', function() {
+            domConstruct.place('<p>Start</p>', 'divStatus');
+        });
+        //ajax call actually sends the network traffic
+        notify('send', function(data, cancel) {
+            //cancel allows you to terminate the request if you choose, triggering the fail condition on the call
+            domConstruct.place('<p>Sent request</p>', 'divStatus');
+        });
+        //ajax call has received a response but not done anything with it
+        notify('load', function(data) {
+            domConstruct.place('<p>Load (response received)</p>', 'divStatus');
+        });
+        //ajax call received an error and is about to begin error processing
+        notify('error', function(error) {
+            domConstruct.place('<p>Error</p>', 'divStatus');
+        });
+        //ajax call is done with success or error processing
+        notify('done', function(data) {
+            domConstruct.place('<p>Done (response processed)</p>', 'divStatus');
+            if (data instanceof Error) {
+                console.log('data was an error');
+            } else {
+                console.log('data was successful');
+            }
+        });
+        
+    });
+</script>
+<body>
+    <div>
+        <button id="textButton">Request Text File</button>
+    </div>
+    <div id="resultDiv">
+
+    </div>
+    <div id="headersDiv">
+
+    </div>
+    <div id='divStatus'></div>
+</body>
