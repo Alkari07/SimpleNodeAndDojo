@@ -48,6 +48,40 @@
 
         //**MANIPULATING
         
+        //you can quickly map all values into an array into some new object list using arrayUtil.map
+        var original = ["one", "two", "three", "four", "five"];
+        var mapped = arrayUtil.map(original, function(item,index) {
+            return {
+                id: index*100,
+                text: item
+            }
+        });
+        arrayUtil.forEach(mapped, function(item, index) {
+            console.log("Item number " + index + ": " + JSON.stringify(item));
+        });
+
+        //let's say you only wanted a subset of an array that matched some filter condition.
+        //You can use the filter utility to just define a comparitor for when values should be included
+        var filtered = arrayUtil.filter(mapped, function(item, index) {
+            return item.id > 50 && item.id < 350;
+        })
+        arrayUtil.forEach(filtered, function(item, index) {
+            console.log("Filtered Item number " + index + ": " + JSON.stringify(item));
+        });
+        
+        //the "every" and "some" operator check if every element in a list matches a condition, or
+        //if some of them do
+        var array1 = [1,2,3,4,5];
+        var result1 = arrayUtil.every(arr1, function(item) {
+            return item==1;
+        });
+        var result2 = arrayUtil.some(arr1, function(item) {
+            return item==1;
+        });
+        console.log("Every item in the list is equal to 1: " + result1);
+        console.log("Some items in the list are equal to 1: " + result2);
+
+        //all of this is supported by javascript by default with ECMA6, but these utilities ensure cross browser compatibility
     });
 </script>
 <body>
