@@ -1,0 +1,28 @@
+<html>
+<body>
+    <script src="dojo/dojo.js" data-dojo-config="async: true"></script>
+    <script>
+        require([
+            'customModules/counterModule',
+            'dojo/_base/declare',
+            'dijit/_WidgetBase',
+            'digit/_TemplateMixin',
+            'dojo/text!./dojoFundamentals/arrays.html'], 
+            function(counter, declare, _WidgetBase, _TemplateMixin, template) {
+            //retrieving my own custom defined module
+            console.log(counter.getValue());
+            counter.increment();
+            console.log(counter.getValue());
+
+            //A singleton module should be lowerCamelCase (representing that it is an actual instance)
+            //A class module should be UpperCamelCase and return a constructor
+            //var myModule = new ClassModule();
+
+            // return declare ([_WidgetBase, _TemplateMixin], {
+            //     //template contains the content of the file arrays.html
+            //     templateString: template
+            // });
+        })
+    </script>
+</body>
+</html>
