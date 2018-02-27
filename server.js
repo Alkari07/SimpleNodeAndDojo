@@ -48,6 +48,10 @@ router.get('/domFunctions', function(req, res) {
     res.sendFile(path+ "dojoDOM/domFunctions.html");
 });
 
+router.get('/domQuery', function(req, res) {
+    res.sendFile(path+ "dojoDOM/domQuery.html");
+});
+
 app.use("/", router);
 
 //this is how you register additional static folders for files to be accessed from

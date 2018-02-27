@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
+            data-dojo-config="async: true">
+    </script>
+    <script>
+        require(["dojo/dom", 
+        'dojo/query',
+        'dojo/dom-class',
+        'dojo/NodeList-dom',
+        "dojo/domReady!"], 
+        function(dom, query, domClass) {
+            //retrieve an array of nodes with the ID 'list'
+            //only one element is ever retrieved, but this always returns a list of nodes
+            //same style as jquery
+            var list = query('#list')[0];
+
+            //retrieves all nodes with class odd
+            var odds = query('.odd');
+
+            //retrieve only the odds in list1
+            //this queries the entire dom structure looking for a match
+            var odds1 = query('#list .odd');
+
+            //this is faster - first selects the parent element, then only matches under it
+            var odds2 = query ('.odd', dom.byId('list'));
+
+            //this retrieves all nodes with tag name a and class odd
+            var oddA = query('a.odd');
+
+            //SEPARATING identifiers shows hierarchy
+            //COMBINGING them targets nodes more specifically
+            
+
+            //retrieve an array of any a element that has an li as its direct parent
+            var someA=query('li > a');
+
+            //**WORKING with the node list
+            //the nodeList array has helper methods
+            query('.odd').forEach(function(node,index,nodelist) {
+                //for each node in the array returned by the query
+                domClass.add(node, 'red');
+            });
+
+            //other helper methods are similar to array
+            //map, filter, every, some
+            //map and filter return a new nodeList
+            //every and some return booleans
+
+            //additional helper methods simplify things further
+            query('.even').addClass('blue').style('color', 'white').addClass('italic'); //foreach even node, add blue class - no need for a loop!
+
+            //also works for hooking up dom event handlers
+            query('.hookUp').on('click', function() {
+                console.log('this button is hooked up');
+            });
+            
+
+        });
+    </script>
+</head> 
+<body>
+    <ul id="list">
+        <li class="odd">
+            <div class="bold">
+                <a class="odd">Odd</a>
+            </div>
+        </li>
+        <li class="even">
+            <div class="italic">
+                <a class="even">Even</a>
+            </div>
+        </li>
+        <li class="odd">
+            <a class="odd">Odd</a>
+        </li>
+        <li class="even">
+            <div class="bold">
+                <a class="even">Even</a>
+            </div>
+        </li>
+        <li class="odd">
+            <div class="italic">
+                <a class="odd">Odd</a>
+            </div>
+        </li>
+        <li class="even">
+            <a class="even">Even</a>
+        </li>
+    </ul>
+    
+    <ul id="list2">
+        <li class="odd">Odd</li>
+    </ul>
+
+    <div id="nodeList">
+        <div class="odd">One</div>
+        <div class="even">Two</div>
+        <div class="odd">Three</div>
+        <div class="even">Four</div>
+        <div class="odd">Five</div>
+        <div class="even">Six</div>
+    </div>
+
+    <button class="hookUp demoBtn">Click Me!</button>
+    <button class="hookUp demoBtn">Click Me!</button>
+    <button class="hookUp demoBtn">Click Me!</button>
+    <button class="hookUp demoBtn">Click Me!</button>
+</body>
+</html>
