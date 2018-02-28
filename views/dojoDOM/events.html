@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+            <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"
+            data-dojo-config="async: true">
+    </script>
+    <script>
+        require([
+            'dojo/on',
+            'dojo/dom',
+            'dojo/dom-style',
+            'dojo/mouse',
+            'dojo/_base/lang',
+            'dojo/query',
+            'dojo/topic',
+            'dojo/domReady!'
+        ], function(on, dom, domStyle, mouse, lang, query, topic) {
+            var myButton = dom.byId('myButton'),
+            myDiv = dom.byId('myDiv');
+
+            on(myButton, 'click', function(evt) {
+                domStyle.set(myDiv, 'backgroundColor', 'blue');
+            });
+
+            //not all browsers support mouse enter and mouse leave - dojo provides this
+            on(myDiv, mouse.enter, function(evt) {
+                domStyle.set(myDiv, 'backgroundColor', 'red');
+            });
+            on(myDiv, mouse.leave, function(evt) {
+                domStyle.set(myDiv, 'backgroundColor', '');
+            });
+
+            //basic pattern is on(element, event name, handler)
+            //event handlers are always called in the order registered
+            //they ar always called with an event object as the first param
+            //the event object will always include w3C event properties (target, stopPropagation, etc)
+
+            //the return value of every on() call is a handler with a remove() function
+            var handle = on(myButton, 'click', function(evt) {
+                //remove this event using the handler
+                handle.remove();
+                //do stuff you only want to handle once here
+                alert('this alert only appears once');
+            });
+
+            //**SCOPING
+            //you can rescope a handler to be within an object, not necessarily the html element that called it
+            var myScopedButton = dom.byId('myScopedButton1');
+            var myScopedButton2 = dom.byId('myScopedButton2');
+            var myObject = {
+                id: 'myObject',
+                onClick: function(evt) {
+                    alert("The scope of the handler is: " + this.id );
+                }
+            }
+            //scope is button1
+            on (myScopedButton, 'click', myObject.onClick);
+            //scope is myObject
+            on (myScopedButton2, lang.hitch(myObject, 'onClick'));
+
+            //this binds all button to the same event, and returns an array which can be used to
+            //remove the handlers individually or by using a top level method to remove all at once
+            var handles = query('.btnList').on('click', function() {
+                alert('all buttons bound, this will only fire once');
+                handles.remove();
+            });
+
+            //also possible to attach a handler to a higher level div and check any event bubbling up 
+            //from lower level elements to see if the event applies
+            on(dom.byId('parentDiv'), '.clickMe:click', function() {
+                //the scope will be the element that triggered the event, NOT the parent div
+                alert('Parent div handler was triggered.  Scope is: ' + this.textContent);
+            });
+
+            //sometimes, not everything will be under the same div in a way that makes sense
+            //in this case, you might create a special event (a topic) and register subscribers to it
+            on(dom.byId('sub1'), 'click', function() {
+                //publishes a message to the alertUser topic
+                topic.publish('alertUser', 'S1 publishing alert');
+            });
+            on(dom.byId('sub2'), 'click', function() {
+                //publishes a message to the alertUser topic
+                topic.publish('alertUser', 'S2 publishing alert');
+            });
+            on(dom.byId('sub3'), 'click', function() {
+                //publishes a message to the alertUser topic
+                topic.publish('alertUser', 'S3 publishing alert');
+            });
+
+            //register the alerting routine with the alertUser topic
+            topic.subscribe('alertUser', function(text) {
+                alert(text);
+            });
+        });
+    </script>
+</head>
+<body>
+    <button id="myButton">Click me!</button>
+    <div id="myDiv">Hover over me!</div>
+    <button id="myScopedButton1">Button 1</button>
+    <button id="myScopedButton2">Button 2</button>
+    <br>
+    <button class='btnList'>Button L1</button>
+    <button class='btnList'>Button L2</button>
+    <button class='btnList'>Button L3</button>
+    <br>
+
+    <div id="parentDiv">
+        <button class='clickMe'>Button D1</button>
+        <button class='clickMe'>Button D2</button>
+        <button class='clickMe'>Button D3</button>
+    </div>
+    <br>
+
+    <button id="sub1">Button S1</button>
+    <button id="sub2">Button S2</button>
+    <button id="sub3">Button S3</button>
+</body>
+</html>
